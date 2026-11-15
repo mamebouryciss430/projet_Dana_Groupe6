@@ -1,0 +1,69 @@
+#Les musées situées dans la ville de Nantes(France) et leurs informations
+SELECT ?name ?adresse ?code
+WHERE
+{
+?museum     rdf:type schema:Museum ;
+            schema:name  ?name.
+OPTIONAL { ?museum schema:streetAddress ?adresse . }
+OPTIONAL { ?museum schema:postalCode ?code . }
+OPTIONAL { ?museum schema:addressLocality ?ville . }
+?ville  schema:name     "Nantes" ;
+        schema:country  dbr:France;
+        rdf:type        schema:City .
+}
+
+#Les musées de France qui n'ont pas de sites internet
+SELECT ?name ?adresse ?code ?ville
+WHERE
+{
+?museum     rdf:type schema:Museum ;
+            schema:name  ?name.
+OPTIONAL { ?museum schema:streetAddress ?adresse . }
+OPTIONAL { ?museum schema:postalCode ?code . }
+OPTIONAL { ?museum schema:addressLocality ?ville . }
+FILTER NOT EXISTS{
+    ?museum schema:url ?url.
+}
+}
+
+#Les noms et adresses complétes des musées dont les thémes incluent "sciences et techniques"
+SELECT ?name ?adresse ?code ?ville ?subject
+WHERE
+{
+    ?museum     rdf:type schema:Museum ;
+            schema:name  ?name;
+            schema:subjectOf ?subject.
+   OPTIONAL { ?museum schema:streetAddress ?adresse . }
+   OPTIONAL { ?museum schema:postalCode ?code . }
+   OPTIONAL { ?museum schema:addressLocality ?ville . }
+   FILTER REGEX(?subject,"sciences et techniques")
+}
+
+#Quelle est la région qui contient le plus de musées
+SELECT ?region (COUNT(?museum) AS ?nbMusees)
+WHERE {
+  ?museum rdf:type schema:Museum ;
+          schema:addressRegion ?region .
+}
+GROUP BY ?region
+ORDER BY DESC(?nbMusees)
+LIMIT 1
+
+#Quelles sont les musées se trouvant dans le meme département que le musée des beaux-arts de Nantes
+SELECT ?name ?departement ?adresse ?code ?ville
+WHERE {
+  ?mba rdf:type schema:Museum ;
+       schema:name ?nomMba ;
+       schema:address ?departement ;
+       schema:addressLocality ?villeMba .
+  ?villeMba schema:name "Nantes" .
+  FILTER REGEX(?nomMba, "musée des beaux-arts")
+
+  ?museum rdf:type schema:Museum ;
+          schema:name ?name ;
+          schema:address ?departement .
+
+  OPTIONAL { ?museum schema:streetAddress ?adresse . }
+  OPTIONAL { ?museum schema:postalCode ?code . }
+  OPTIONAL { ?museum schema:addressLocality ?ville . }
+}

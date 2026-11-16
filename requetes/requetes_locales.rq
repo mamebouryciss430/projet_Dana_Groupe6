@@ -39,7 +39,7 @@ WHERE
    FILTER REGEX(?subject,"sciences et techniques")
 }
 
-#Quelle est la région qui contient le plus de musées
+#Quelles sont les 5 régions qui ont le plus de musées
 SELECT ?region (COUNT(?museum) AS ?nbMusees)
 WHERE {
   ?museum rdf:type schema:Museum ;
@@ -47,7 +47,7 @@ WHERE {
 }
 GROUP BY ?region
 ORDER BY DESC(?nbMusees)
-LIMIT 1
+LIMIT 5
 
 #Quelles sont les musées se trouvant dans le meme département que le musée des beaux-arts de Nantes
 SELECT ?name ?departement ?adresse ?code ?ville

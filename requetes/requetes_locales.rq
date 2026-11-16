@@ -3,10 +3,10 @@ SELECT ?name ?adresse ?code
 WHERE
 {
 ?museum     rdf:type schema:Museum ;
-            schema:name  ?name.
-OPTIONAL { ?museum schema:streetAddress ?adresse . }
-OPTIONAL { ?museum schema:postalCode ?code . }
-OPTIONAL { ?museum schema:addressLocality ?ville . }
+            schema:name  ?name;
+            schema:streetAddress ?adresse;
+            schema:postalCode ?code;
+            schema:addressLocality ?ville .
 ?ville  schema:name     "Nantes" ;
         schema:country  dbr:France;
         rdf:type        schema:City .
@@ -17,10 +17,10 @@ SELECT ?name ?adresse ?code ?ville
 WHERE
 {
 ?museum     rdf:type schema:Museum ;
-            schema:name  ?name.
-OPTIONAL { ?museum schema:streetAddress ?adresse . }
-OPTIONAL { ?museum schema:postalCode ?code . }
-OPTIONAL { ?museum schema:addressLocality ?ville . }
+            schema:name  ?name;
+            schema:streetAddress ?adresse;
+            schema:postalCode ?code;
+            schema:addressLocality ?ville .
 FILTER NOT EXISTS{
     ?museum schema:url ?url.
 }
@@ -32,10 +32,10 @@ WHERE
 {
     ?museum     rdf:type schema:Museum ;
             schema:name  ?name;
-            schema:subjectOf ?subject.
-   OPTIONAL { ?museum schema:streetAddress ?adresse . }
-   OPTIONAL { ?museum schema:postalCode ?code . }
-   OPTIONAL { ?museum schema:addressLocality ?ville . }
+            schema:subjectOf ?subject;
+            schema:streetAddress ?adresse;
+            schema:postalCode ?code;
+            schema:addressLocality ?ville .
    FILTER REGEX(?subject,"sciences et techniques")
 }
 
@@ -61,9 +61,10 @@ WHERE {
 
   ?museum rdf:type schema:Museum ;
           schema:name ?name ;
-          schema:address ?departement .
+          schema:address ?departement ;
+          schema:postalCode ?code ;
+          schema:addressLocality ?ville . 
 
   OPTIONAL { ?museum schema:streetAddress ?adresse . }
-  OPTIONAL { ?museum schema:postalCode ?code . }
-  OPTIONAL { ?museum schema:addressLocality ?ville . }
+
 }
